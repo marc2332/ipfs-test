@@ -1,0 +1,37 @@
+<body>
+	<div id="view">
+
+	</div>
+	<input id="input" placeHolder="write message"/>
+	<button id="send">
+		send
+	</button>
+	<input id="user" placeHolder="user name"/>
+	<input id="port" placeHolder="port" value ="0"/>
+	<button id="connect">
+		connect
+	</button>
+</body>
+<script>
+
+	const send = document.getElementById('send')
+	const user = document.getElementById('user')
+	const view = document.getElementById('view')
+	const input = document.getElementById('input')
+	const connect = document.getElementById('connect')
+	const port = document.getElementById('port')
+	
+	send.addEventListener('click', () => {
+		const value = input.value
+		
+		bridge.send(value)
+	})
+	
+	connect.addEventListener('click', () => {
+		bridge.init(user.value,port.value, ({user, message}) => {
+			view.innerHTML +=  '<p>('+user+') -> '+message+'</p>'
+		})
+	})
+	
+	
+</script>

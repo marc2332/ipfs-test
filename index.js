@@ -1,41 +1,25 @@
-const IPFS = require('ipfs-core');
+const { app, BrowserWindow } = require('electron')
 
+const IPFS = require('ipfs-core')
+const CID = require('cids')
+const uint8ArrayFromString = require('uint8arrays/from-string')
+const uint8ArrayToString = require('uint8arrays/to-string')
+const path = require('path')
 
-(async () => {
-	const node = await IPFS.create()
-	
-	console.log(`\n\n`)
+app.whenReady().then(() => {
 
-	const intialData = `Random data ${Math.random()}`
-	
-	console.log(`Initial data ${intialData}`)
+	const win = new BrowserWindow({ 
+		webPreferences: {
+			contextIsolation: true,
+			preload: path.join(__dirname, 'preload.js')
+		},
+		width: 800, 
+		height: 600
+	})
 
-	const result = await node.add(intialData)
-
-	const dataID = result.cid.toString()
-	
-	console.log(`Created cid: ${dataID}`)
-	
-	const stream = node.cat(dataID)
-	
-	let finalData = ''
-
-	for await (const chunk of stream) {
-		finalData += chunk.toString()
-	}
-
-	console.log(`Data received: ${finalData}`)
-	
-	console.log(`\n\n`)
+	win.loadURL(`file://${__dirname}/index.html`)
 
 	
-	const stream2 = node.cat(`QmfGCeWzdLNVvJrKJtN3mJ3gaVE8eNpB9H6vds5pGh9zex`)
+	
+})
 
-	let finalDataTest2 = ''
-
-	for await (const chunk of stream2) {
-		finalDataTest2 += chunk.toString()
-	}
-
-	console.log(`Data received: ${finalDataTest2}`)
-})();
